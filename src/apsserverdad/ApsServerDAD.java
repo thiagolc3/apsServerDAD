@@ -24,10 +24,14 @@ public class ApsServerDAD {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         int serverPort = 8000;
         ServerSocket listenSocket = new ServerSocket(serverPort);
-        Socket clientSocket = listenSocket.accept();
-        ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
-        String data = (String) in.readObject();
-        System.out.println(data);
+
+        while (true) {
+            Socket clientSocket = listenSocket.accept();
+            ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
+            String data = (String) in.readObject();
+            System.out.println(data);
+        }
+        
     }
 
 }
