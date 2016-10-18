@@ -26,10 +26,12 @@ public class ApsServerDAD {
         ServerSocket listenSocket = new ServerSocket(serverPort);
 
         while (true) {
+            
             Socket clientSocket = listenSocket.accept();
             ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
             String data = (String) in.readObject();
             System.out.println(data);
+            
         }
         
     }
