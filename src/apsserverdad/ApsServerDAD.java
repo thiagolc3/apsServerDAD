@@ -5,6 +5,7 @@
  */
 package apsserverdad;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
@@ -30,6 +31,8 @@ public class ApsServerDAD {
             ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
             String data = (String) in.readObject();
             System.out.println(data);
+            DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
+            out.writeUTF("mensagem recebida");
         }
         
     }
