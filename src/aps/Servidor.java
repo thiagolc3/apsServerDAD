@@ -5,7 +5,6 @@
  */
 package aps;
 
-import aps.HibernateUtil;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
