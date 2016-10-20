@@ -7,6 +7,6 @@
     <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/apsDAD?zeroDateTimeBehavior=convertToNull</property>
     <property name="hibernate.connection.username">root</property>
     <property name="hibernate.connection.password">lsfo</property>
-    <mapping resource="apsdad/Mensagens.hbm.xml"/>
+    <mapping resource="aps/Mensagens.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

@@ -3,16 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package apsdad;
+package aps;
 
 import aps.HibernateUtil;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -20,24 +21,22 @@ import org.hibernate.Session;
  *
  * @author lsfo
  */
-public class ApsServerDAD {
+public class Servidor extends Thread {
 
-    /**
-     * @param args the command line arguments
-     * @throws java.io.IOException
-     * @throws java.lang.ClassNotFoundException
-     */
     private static final String QUERY = "from Mensagens";
-    
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
-        
-        int serverPort = 8000;
-        ServerSocket listenSocket = new ServerSocket(serverPort);
+    Socket clientSocket;
 
-        while (true) {
-            Socket clientSocket = listenSocket.accept();
+    public Servidor(Socket clientSocket) {
+        this.clientSocket = clientSocket;
+    }
+
+    @Override
+    public void run() {
+
+        ObjectInputStream in = null;
+        try {
             
-            ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
+            in = new ObjectInputStream(clientSocket.getInputStream());
             String data = (String) in.readObject();
             System.out.println(data);
             
@@ -47,14 +46,19 @@ public class ApsServerDAD {
             ObjectOutputStream outObj = new ObjectOutputStream(clientSocket.getOutputStream());
             List lista = executeHQLQuery(QUERY);
             outObj.writeObject(lista);
-        }
         
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                in.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
-//    private static void runQuery() {
-//        executeHQLQuery(QUERY);
-//    }
-
-    private static List executeHQLQuery(String QUERY) {
+    
+        private static List executeHQLQuery(String QUERY) {
             Session session = HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
             Query q = session.createQuery(QUERY);
@@ -62,5 +66,4 @@ public class ApsServerDAD {
             session.getTransaction().commit();
             return resultList;
     }
-    
 }
